@@ -1,0 +1,84 @@
+#encoding: utf-8
+import circulo
+import random
+import sys
+import subprocess
+def circuloRandom():
+	#Devuelve una lista [x1,y1,r,data]
+	x1 = random.randint(1,399)
+	y1 = random.randint(1,399)
+	rmax = min(400-x1,400-y1)
+	if (400-x1) > (400-y1) :
+		r = random.randint(1,rmax)
+	else:
+		r = random.randint(1,rmax)	
+	data = str(x1)+','+str(y1)
+	return circulo.Circulo(x1,y1,r)
+def leerCirculos(nombre_arch) :
+
+	#Devuelve una lista de circulos a partir de un archivo con formato x1,y1,r
+	
+	arch = open(nombre_arch,'r')
+	tmp = []
+	for line in arch :
+		tmp.append(line.split(','))
+	for c in tmp :
+		c[0] = int (c[0])
+		c[1] = int (c[1])
+		c[2] = int (c[2])
+	return [circulo.Circulo(c[0],c[1],c[2]) for c in tmp]		
+def crearArchivoPlot(nombre_arch) :
+	#Crea un archivo .gnu para plotear los circulos descritos en el archivo nombre_arch
+	#este archivo debe tener el formato x1,y1,r
+	outfile = open ('circulos.gnu','wa')
+	outfile.write("set term x11 \nset size ratio - 1 \nset parametric \nset xrange [0:400] \nset yrange [0:400] \nunset key \nset multiplot\n")
+	outfile.write("x(t) = r*cos(t) + x0\ny(t) = r*sin(t) + y0\n")	
+	circulos = leerCirculos(nombre_arch)
+	#para cada obj circulo, escribir sus datos en el archivo para que se ploteen.
+	i = j = 0
+	while i < len(circulos) :
+		outfile.write("r = {}\n".format(circulos[i].r))
+		outfile.write("x0 = {}\n".format(circulos[i].x1))
+		outfile.write("y0 = {}\n".format(circulos[i].y1))
+		# aqui hay que decidir si w l o bien, w lt 2
+		j = 0
+		flag = 0
+		while j < len(circulos) :
+			if circulos[i] != circulos [j] :
+				if circulos[i].compara(circulos[j]) == 0 :
+					flag = 1 #si hay al menos uno en colisión				
+			j += 1
+		if flag == 1 :
+			outfile.write("plot x(t),y(t) w l lt 2\n")
+		else :
+			outfile.write("plot x(t),y(t) w l\n")
+		i += 1
+	outfile.write("unset multiplot\npause -1")
+	outfile.close()
+def main() :
+	if len(sys.argv) != 2 :
+		print 'Args: número_de_círculos'
+		sys.exit(2)
+	try :
+		nCirculos = int(sys.argv[1])
+	except ValueError:
+		print 'El argumento debe ser un número.'
+		sys.exit(3)
+	listaC = []
+	for i in range(nCirculos):
+		listaC.append(circuloRandom())
+	arch = open('lista_circulos.dat','wa')
+	i = 0 
+	while i < nCirculos :
+		arch.write("{},{},{}\n".format(listaC[i].x1,listaC[i].y1,listaC[i].r))
+		i += 1
+	arch.close()
+	circulos = leerCirculos('lista_circulos.dat')
+	crearArchivoPlot('lista_circulos.dat')
+	try :
+		subprocess.check_output(['gnuplot','circulos.gnu'])
+	except KeyboardInterrupt:
+		#plot.terminate()
+		print "Bye!"
+		sys.exit(0)
+main()
