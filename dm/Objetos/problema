@@ -1,0 +1,32 @@
+6/07/2017
+
+Problema:
+	Calcular la intersección entre circulos 
+1. Un círculo está definido por su origen y radio.
+
+---------------------------------------------------
+|                                                 |
+|                                                 |
+|                                                 |
+|                                                 |
+|                                                 |
+|                                                 |
+|                                                 |
+|                                                 |
+---------------------------------------------------
+400x400
+
+1. Crear circulos aletorios dentro del área de trabajo (el número de círculos a crear se lee por linea de cmd)
+La salida será un archivo.
+c1x c1y r1
+c2x c2y r2
+ .
+ .
+ .
+cnx cny rn
+
+2. Leer los círculos y probar entre cuáles existe colisión. 
+Hay colisiòn si la distancia entre los centros es menor o igual a la suma de los radios de los circulos
+
+3. Leer el archivo generado en el punto (1) y crear un archivo
+para gnuplot para graficarlos.

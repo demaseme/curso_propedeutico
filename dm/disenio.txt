@@ -1,0 +1,6 @@
+6/07/2017
+
+Problema:
+	Necesito checar la intersección entre rectángulos.
+1. Solución procedural
+2. Solución usando a objetos.

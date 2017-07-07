@@ -1,0 +1,20 @@
+set term x11
+
+x(t) = 20*cos(t) + x0
+y(t) = 20*sin(t) + y0
+
+set size ratio - 1
+set parametric
+
+set xrange [0:400]
+set yrange [0:400]
+unset key
+
+set multiplot
+r = 20
+x0 = 100
+y0 = 50
+
+plot x(t),y(t) w l
+
+
